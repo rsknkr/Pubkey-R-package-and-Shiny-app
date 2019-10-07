@@ -1,0 +1,52 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r}
+library(dplyr)
+#setwd("C:/Users/Frank/Desktop/Git Work/In-Class work/Final Project/r-package-rosetta-stone-4-0/Data")
+#When run we will need to import tables from our keyword grab.  We should be able to build this with variables that the user will give.
+
+#Say the term is "Biostatistics[MeSH Term]" and the range is 2014 to 2018
+
+term <- "Biostatistics[MeSH Term] AND epidemic"
+Years<-c(2015:2018)
+
+#Make totals data set
+# Test<-paste("Keywords_",term," AND ( ",Years[1]," [PDAT]).csv",sep="")
+# Test=="Keywords_Biostatistics[MeSH Term] AND epidemic AND ( 2015 [PDAT]).csv"
+
+Blocker<-c() #We'll fill this with blank years for our naming
+
+First <- paste("../Data/Keywords_",term," AND ( ",Years[1]," [PDAT]).csv",sep="")
+#file.exists(First)
+First_Table<-read.csv(First)
+Total_Freq<-subset(First_Table, select=(2:3))
+
+for(i in 2:length(Years)){
+  Filename<-paste("../Data/Keywords_",term," AND ( ",Years[i]," [PDAT]).csv",sep="")
+  ith_table<-read.csv(Filename)
+  if(identical(ith_table[1,2],NA)){#Stops blank years from screwing us up
+    print(paste("Year",Years[i],"is empty"))
+    Blocker[length(Blocker)+1]<-Years[i]
+  }else{
+  print(paste("was here with",Filename)) #For testing
+  To_Join<-subset(ith_table, select=(2:3))
+  Total_Freq <- full_join(Total_Freq,To_Join, by = "Var1")
+  }
+}
+
+name_list<-c("Keyword")
+for(i in 1:length(Years)){
+  if(is.na(match(Years[i],Blocker))==FALSE){
+    
+  }else{
+    name_list[length(name_list)+1]<-Years[i]
+}
+}
+names(Total_Freq)<-name_list
+write.csv(Total_Freq,'../Data/Total_Keywords.csv')
+
+```
+

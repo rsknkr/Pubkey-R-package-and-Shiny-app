@@ -1,0 +1,11 @@
+Package: pubkey
+Type: Package
+Title: pubkey
+Version: 0.1.0
+Author: Frank DeVone
+Maintainer: <frank_devone@brown.edu>
+Description: Gathers the keywords in a search query on PubMed
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+
